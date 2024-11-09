@@ -1,0 +1,5 @@
+{
+	"app_name": "sample",
+	"app_name_lower": "{{cookiecutter.app_name.lower()}}",
+	"app_title": "{{cookiecutter.app_name.capitalize()}}"
+}

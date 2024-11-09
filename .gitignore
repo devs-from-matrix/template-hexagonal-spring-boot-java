@@ -1,5 +1,6 @@
 # IntelliJ project files
 .idea
 *.iml
-out
-gen
+
+# The default sample project
+sample
