@@ -1,5 +1,7 @@
 {
-	"app_name": "sample",
+	"app_name": "{{cookiecutter.app_name}}",
 	"app_name_lower": "{{cookiecutter.app_name.lower()}}",
-	"app_title": "{{cookiecutter.app_name.capitalize()}}"
+	"app_title": "{{cookiecutter.app_name.capitalize()}}",
+	"group_id": "org.dfm.{{cookiecutter.app_name_lower}}",
+	"artifact_id": "{{cookiecutter.app_name_lower}}"
 }
