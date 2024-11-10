@@ -35,4 +35,4 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
-        run: cd sample && mvn clean install -ntp
+        run: cd cart-service && mvn clean install -ntp

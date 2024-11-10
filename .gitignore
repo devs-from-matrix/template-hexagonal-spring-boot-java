@@ -3,4 +3,6 @@
 *.iml
 
 # The default sample project
-sample
+cart-service
+
+target

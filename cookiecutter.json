@@ -1,7 +1,11 @@
 {
 	"app_name": "{{cookiecutter.app_name}}",
-	"app_name_lower": "{{cookiecutter.app_name.lower()}}",
 	"app_title": "{{cookiecutter.app_name.capitalize()}}",
-	"group_id": "org.dfm.{{cookiecutter.app_name_lower}}",
-	"artifact_id": "{{cookiecutter.app_name_lower}}"
+	"domain": "{{cookiecutter.domain}}",
+	"domain_capitalized": "{{cookiecutter.domain.capitalize()}}",
+	"domain_plural": "{%- if cookiecutter.app_name.endswith('y') -%}{{cookiecutter.domain.replace('y','')}}ies{% else %}{{cookiecutter.domain.lower()}}s{% endif %}",
+	"domain_plural_capitalized": "{{cookiecutter.domain_plural.capitalize()}}",
+	"group_id": "org.{{cookiecutter.domain}}",
+	"artifact_id": "{{cookiecutter.domain}}",
+	"package_name": "{{cookiecutter.domain}}"
 }
