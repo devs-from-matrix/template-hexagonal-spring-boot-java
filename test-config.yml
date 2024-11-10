@@ -1,4 +1,3 @@
 default_context:
-  app_name: "sample"
-  group_id: "org.example.sample"
-  artifact_id: "sample"
+  app_name: "cart-service"
+  domain: "cart"
