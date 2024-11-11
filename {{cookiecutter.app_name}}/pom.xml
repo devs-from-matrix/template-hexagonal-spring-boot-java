@@ -38,8 +38,8 @@
     <module>domain</module>
     <module>jpa-adapter</module>
     <module>rest-adapter</module>
-    <!--
     <module>bootstrap</module>
+    <!--
     <module>acceptance-test</module>-->
   </modules>
   <dependencyManagement>
@@ -63,6 +63,11 @@
       <dependency>
         <groupId>{{cookiecutter.group_id}}</groupId>
         <artifactId>rest-adapter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>{{cookiecutter.group_id}}</groupId>
+        <artifactId>bootstrap</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- Frameworks & Libraries -->
