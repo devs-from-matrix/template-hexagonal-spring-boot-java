@@ -1,0 +1,76 @@
+---
+openapi: 3.0.1
+info:
+  title: {{cookiecutter.domain_capitalized}} API Documentation
+  version: v1
+tags:
+  - name: {{cookiecutter.domain_capitalized}}
+    description: Resource to manage {{cookiecutter.domain}}
+paths:
+  "/api/v1/{{cookiecutter.domain_plural}}":
+    get:
+      tags:
+        - {{cookiecutter.domain_capitalized}}
+      summary: Get all {{cookiecutter.domain_plural}}
+      operationId: get{{cookiecutter.domain_plural_capitalized}}
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/{{cookiecutter.domain_capitalized}}Info"
+  "/api/v1/{{cookiecutter.domain_plural}}/{code}":
+    get:
+      tags:
+        - {{cookiecutter.domain_capitalized}}
+      summary: Get {{cookiecutter.domain}} by code
+      operationId: get{{cookiecutter.domain_capitalized}}ByCode
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/{{cookiecutter.domain_capitalized}}"
+components:
+  schemas:
+    {{cookiecutter.domain_capitalized}}:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int64
+        description:
+          type: string
+    {{cookiecutter.domain_capitalized}}Info:
+      type: object
+      properties:
+        {{cookiecutter.domain_plural}}:
+          type: array
+          items:
+            "$ref": "#/components/schemas/{{cookiecutter.domain_capitalized}}"
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
