@@ -3,8 +3,10 @@
 	"app_title": "{{cookiecutter.app_name.capitalize()}}",
 	"domain": "{{cookiecutter.domain}}",
 	"domain_capitalized": "{{cookiecutter.domain.capitalize()}}",
+	"domain_uppercase": "{{cookiecutter.domain.upper()}}",
 	"domain_plural": "{%- if cookiecutter.app_name.endswith('y') -%}{{cookiecutter.domain.replace('y','')}}ies{% else %}{{cookiecutter.domain.lower()}}s{% endif %}",
 	"domain_plural_capitalized": "{{cookiecutter.domain_plural.capitalize()}}",
+	"domain_plural_uppercase": "{{cookiecutter.domain_plural.upper()}}",
 	"group_id": "org.{{cookiecutter.domain}}",
 	"artifact_id": "{{cookiecutter.domain}}",
 	"package_name": "{{cookiecutter.domain}}"

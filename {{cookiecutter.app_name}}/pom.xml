@@ -36,8 +36,8 @@
   <modules>
     <module>domain-api</module>
     <module>domain</module>
-    <!--<module>rest-adapter</module>
     <module>jpa-adapter</module>
+    <!--<module>rest-adapter</module>
     <module>bootstrap</module>
     <module>acceptance-test</module>-->
   </modules>
@@ -54,7 +54,17 @@
         <artifactId>domain</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>packagename</groupId>
+        <artifactId>jpa-adapter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- Frameworks & Libraries -->
+      <dependency>
+        <groupId>net.lbruun.springboot</groupId>
+        <artifactId>preliquibase-spring-boot-starter</artifactId>
+        <version>${pre-liquibase.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
