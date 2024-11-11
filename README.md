@@ -1,21 +1,24 @@
-# Title
+# Template project for hexagonal-spring-boot-java
 
-<!-- 
-this project was generated with https://github.com/devs-from-matrix/basic-template-repository. 
--->
+This is a template project for hexagonal-spring-boot-java. This project is generated using [cookiecutter](https://cookiecutter.readthedocs.io/en).
 
-## [Documentation](https://devs-from-matrix.github.io/basic-template-repository/)
+## Pre-requisites
+
+- [cookiecutter](https://cookiecutter.readthedocs.io/en/stable/README.html#installation)
 
 ## How to build ?
 
-<!-- mention the steps for building this project -->
+```
+cookiecutter . --config-file=test-config.yml --no-input
+```
 
-## How to start ?
+## How to contribute ?
 
-<!-- mention the steps for starting or serving this project -->
-
-## Contribution guidelines
-
-We are really glad you're reading this, because we need volunteer developers to help this project come to fruition.
-
-Request you to please read our [contribution guidelines](https://devs-from-matrix.github.io/basic-template-repository/#/README?id=contribution-guidelines)
+- The folder `{{cookiecutter.app_name}}` hosts the template project.
+- You can check the various patterns used in [cookiecutter.json](cookiecutter.json)
+- For testing it locally, you can use the following steps:
+    ```shell
+    cookiecutter . --config-file=test-config.yml --no-input
+    ```
+    - The generated project will be in the folder `cart-service`
+- You need to raise a PR to the main branch with the changes. The CI automatically runs the tests and checks the build status by creating the project referencing the default configuration i.e. `--config-file=test-config.yml`.
