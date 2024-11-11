@@ -9,5 +9,6 @@
 	"domain_plural_uppercase": "{{cookiecutter.domain_plural.upper()}}",
 	"group_id": "org.{{cookiecutter.domain}}",
 	"artifact_id": "{{cookiecutter.domain}}",
-	"package_name": "{{cookiecutter.domain}}"
+	"package_name": "{{cookiecutter.domain}}",
+	"_copy_without_render": [".github/workflows/*.*"]
 }
