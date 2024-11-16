@@ -1,7 +1,7 @@
 version: 2
 updates:
 - package-ecosystem: maven
-  directory: "/{{cookiecutter.app_name}}"
+  directory: "{{cookiecutter.app_name}}/"
   schedule:
     interval: daily
     time: "23:30"
