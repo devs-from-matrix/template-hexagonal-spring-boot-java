@@ -1,8 +1,12 @@
-# IntelliJ project files
+## IntelliJ project files
 .idea
 *.iml
 
-# The default sample project
+## Generated projects
+# The generated project from scaffold-code-from-example.sh
+example-tryout
+# The generated project from cookiecutter
 cart-service
 
+## Build artifacts
 target

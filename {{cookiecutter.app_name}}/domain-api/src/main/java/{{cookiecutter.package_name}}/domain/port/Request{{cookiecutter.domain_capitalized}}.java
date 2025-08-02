@@ -6,7 +6,7 @@ import {{cookiecutter.package_name}}.domain.model.{{cookiecutter.domain_capitali
 
 public interface Request{{cookiecutter.domain_capitalized}} {
 
-  List<{{cookiecutter.domain_capitalized}}> get{{cookiecutter.domain_capitalized}}s();
+  List<{{cookiecutter.domain_capitalized}}> get{{cookiecutter.domain_plural_capitalized}}();
 
   {{cookiecutter.domain_capitalized}} get{{cookiecutter.domain_capitalized}}ByCode(@NonNull Long code);
 }
