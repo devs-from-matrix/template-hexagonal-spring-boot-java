@@ -31,4 +31,7 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
       - name: Build with Maven
-        run: cd cart-service && mvn clean install -ntp
+        run: |
+          cd cart-service
+          mvn git-code-format:format-code 
+          mvn clean install -ntp

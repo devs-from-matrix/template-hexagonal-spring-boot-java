@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import {{cookiecutter.package_name}}.domain.exception.{{cookiecutter.domain_capitalized}}NotFoundException;
 import {{cookiecutter.package_name}}.domain.model.{{cookiecutter.domain_capitalized}};
 import {{cookiecutter.package_name}}.domain.port.Request{{cookiecutter.domain_capitalized}};
@@ -34,7 +35,7 @@ public class {{cookiecutter.domain_capitalized}}ResourceTest {
   private static final String API_URI = "/api/v1/{{cookiecutter.domain_plural}}";
   @LocalServerPort private int port;
   @Autowired private TestRestTemplate restTemplate;
-  @Autowired private Request{{cookiecutter.domain_capitalized}} request{{cookiecutter.domain_capitalized}};
+  @MockitoBean private Request{{cookiecutter.domain_capitalized}} request{{cookiecutter.domain_capitalized}};
 
   @Test
   @DisplayName("should start the rest adapter application")
