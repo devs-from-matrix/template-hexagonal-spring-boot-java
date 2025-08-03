@@ -17,4 +17,10 @@ jobs:
         run: ./generate-cookiecutter-template-from-example-project.sh
       - name: Is there is difference in the generated template?
         run: |
-          diff -qr example-tryout {{cookiecutter.app_name}} --exclude='.DS_Store' 
+          set -e
+          DIFF_OUTPUT=$(diff -qr example-tryout {{cookiecutter.app_name}} --exclude='.DS_Store' || true)
+          if [ -n "$DIFF_OUTPUT" ]; then
+            echo "$DIFF_OUTPUT"
+            echo "$DIFF_OUTPUT" > diff-output.txt
+            exit 1
+          fi
