@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - '{{cookiecutter.app_name}}'
+      - '{{cookiecutter.app_name}}/**'
   workflow_dispatch:
 jobs:
   scaffold:
