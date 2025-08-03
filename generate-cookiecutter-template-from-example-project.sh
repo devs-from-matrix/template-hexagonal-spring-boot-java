@@ -9,7 +9,8 @@ fi
 mkdir "example-tryout"
 cp -r ./example/ ./example-tryout
 cd ./example-tryout
-
+pwd
+ls -lrt
 # sets the locale for all commands run in the current shell session to the "C" locale, which is the default POSIX locale. This makes programs like sed and find treat files as raw bytes, ignoring any character encoding issues. It helps avoid errors like illegal byte sequence when processing files with mixed or unknown encodings.
 export LC_ALL=C
 
