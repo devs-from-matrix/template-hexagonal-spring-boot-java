@@ -1,9 +1,13 @@
-name: Generate
+name: Scaffold code from template
 on:
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+    paths:
+      - '{{cookiecutter.app_name}}'
+  workflow_dispatch:
 jobs:
-  generate:
+  scaffold:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
