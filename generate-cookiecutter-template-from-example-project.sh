@@ -7,7 +7,7 @@ if [ -d "example-tryout" ]; then
 fi
 # Create a new example-tryout directory and copy the example project into it
 mkdir "example-tryout"
-cp -r ./example/ ./example-tryout
+rsync -a ./example/ ./example-tryout/
 cd ./example-tryout
 pwd
 ls -lrt
