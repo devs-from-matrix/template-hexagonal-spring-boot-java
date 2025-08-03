@@ -96,11 +96,6 @@
         <artifactId>preliquibase-spring-boot-starter</artifactId>
         <version>${pre-liquibase.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.github.classgraph</groupId>
-        <artifactId>classgraph</artifactId>
-        <version>${classgraph.version}</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
