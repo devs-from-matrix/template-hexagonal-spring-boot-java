@@ -2,7 +2,7 @@ version: 2
 updates:
 - package-ecosystem: maven
   directories:
-    - "/examples/"
+    - "/example/"
   schedule:
     interval: daily
     time: "23:30"
