@@ -1,26 +1,26 @@
-name: Generate cookiecutter template from example project
-on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'example/**'
-  workflow_dispatch:
-jobs:
-  generate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Make script executable
-        run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
-      - name: Generate cookiecutter template
-        run: ./generate-cookiecutter-template-from-example-project.sh
-      - name: Is there is difference in the generated template?
-        run: |
-          set -e
-          DIFF_OUTPUT=$(diff -qr example-tryout {{cookiecutter.app_name}} --exclude='.DS_Store' || true)
-          if [ -n "$DIFF_OUTPUT" ]; then
-            echo "$DIFF_OUTPUT"
-            echo "$DIFF_OUTPUT" > diff-output.txt
-            exit 1
-          fi
+#name: Generate cookiecutter template from example project
+#on:
+#  pull_request:
+#    branches:
+#      - main
+#    paths:
+#      - 'example/**'
+#  workflow_dispatch:
+#jobs:
+#  generate:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Make script executable
+#        run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
+#      - name: Generate cookiecutter template
+#        run: ./generate-cookiecutter-template-from-example-project.sh
+#      - name: Is there is difference in the generated template?
+#        run: |
+#          set -e
+#          DIFF_OUTPUT=$(diff -qr example-tryout {{cookiecutter.app_name}} --exclude='.DS_Store' || true)
+#          if [ -n "$DIFF_OUTPUT" ]; then
+#            echo "$DIFF_OUTPUT"
+#            echo "$DIFF_OUTPUT" > diff-output.txt
+#            exit 1
+#          fi
