@@ -1,0 +1,50 @@
+name: Continuous Integration
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'example/**'
+  workflow_dispatch:
+jobs:
+  example-ci:
+    defaults:
+      run:
+        working-directory: ./example
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build with Maven
+        run: mvn clean install -ntp
+  generate-template:
+    needs: example-ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make script executable
+        run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
+      - name: Generate cookiecutter template
+        run: ./generate-cookiecutter-template-from-example-project.sh
+      - name: Copy generated template to {{cookiecutter.app_name}}
+        run: |
+          rsync -a --delete --exclude='.git' ./example-tryout/ ./{{cookiecutter.app_name}}/
+      - name: Commit & push generated changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git diff --cached --quiet || git commit -m "ci: update generated cookiecutter template from example"
+          git push
