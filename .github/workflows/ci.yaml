@@ -35,6 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
       - name: Make script executable
         run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
       - name: Generate cookiecutter template
