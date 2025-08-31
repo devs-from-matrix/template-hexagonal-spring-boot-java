@@ -52,5 +52,4 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add .
           git diff --cached --quiet || git commit -m "ci: update generated cookiecutter template from example"
-          git push origin HEAD:${{ github.head_ref }}
           git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.head_ref }}
