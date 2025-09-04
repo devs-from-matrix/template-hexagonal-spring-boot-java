@@ -178,7 +178,7 @@ example/jpa-adapter/
 - Use `@DataJpaTest` and `@ActiveProfiles("test")` for JPA integration tests.
 - Use SQL scripts for test data setup in integration tests.
 - Pre-liquibase script placed at `src/main/resources/preliquibase/default.sql` should be used for database schema and data migrations. The changelog files should be placed in `src/main/resources/db/changelog/` directory. 
-- The changelog files should follow the naming convention `<datetimestamp-entityname>.xml`. Each changelog file should contain changesets for a single entity only and also audit tables should be created for each entity table. The audit tables should have the same structure as the entity table with additional columns for revision information. The audit tables should be named as `<entityname>_AUD`.
+- The changelog files should follow the naming convention `YYYYMMDD-HHMMSS-entityname.xml` (e.g., `20240601-153000-user.xml`). Each changelog file should contain changesets for a single entity only and also audit tables should be created for each entity table. The audit tables should have the same structure as the entity table with additional columns for revision information. The audit tables should be named as `<entityname>_AUD`.
 - Use `slf4j` for logging every entry and exit of the methods with proper log levels. Also, log exceptions with proper log levels and logging of exception should NEVER be skipped.
 
 #### 🚫 Patterns to Avoid
