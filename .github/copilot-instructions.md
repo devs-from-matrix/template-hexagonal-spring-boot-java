@@ -268,7 +268,7 @@ example/acceptance-test/
 #### ✅ Patterns to Follow
 
 - Name step definition classes as `*StepDef.java` and place them in the `cucumber/` package.
-- Place feature files in s`rc/test/resources/features/` and name them as `<domain>.feature`.
+- Place feature files in `src/test/resources/features/` and name them as `<domain>.feature`.
 - Use `@SpringBootTest` and `@ActiveProfiles("test")` for end-to-end with Spring Boot.
 - Use constructor injection for dependencies in step definition classes.
 - Use Cucumber hooks (`Before`, `After`) for test setup and teardown.
