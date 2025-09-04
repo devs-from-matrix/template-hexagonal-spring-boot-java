@@ -10,3 +10,6 @@ cart-service
 
 ## Build artifacts
 target
+
+# macOS generated files
+.DS_Store
