@@ -46,10 +46,10 @@ jobs:
           rsync -a --delete --exclude='.git' ./example-tryout/ ./{{cookiecutter.app_name}}/
       - name: Commit & push generated changes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add .
           git diff --cached --quiet || git commit -m "ci: update generated cookiecutter template from example"
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.head_ref }}
+          git push https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.head_ref }}
