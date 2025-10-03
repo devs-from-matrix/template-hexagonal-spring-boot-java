@@ -38,11 +38,6 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.PAT_TOKEN }}
-      - name: Test PAT with API call
-        run: |
-          curl -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
-               -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/user
       - name: Make script executable
         run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
       - name: Generate cookiecutter template
