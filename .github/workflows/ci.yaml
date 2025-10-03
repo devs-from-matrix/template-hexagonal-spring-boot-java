@@ -37,6 +37,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
+          token: ${{ secrets.PAT_TOKEN }}
       - name: Make script executable
         run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
       - name: Generate cookiecutter template
@@ -50,4 +51,4 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add .
           git diff --cached --quiet || git commit -m "ci: update generated cookiecutter template from example"
-          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.head_ref }}
+          git push origin ${{ github.head_ref }}
