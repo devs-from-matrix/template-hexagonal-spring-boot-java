@@ -29,28 +29,4 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Build with Maven
-        run: mvn clean install -ntp
-      - name: Clean up
-        run: mvn clean
-  generate-template:
-    needs: example-ci
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          token: ${{ secrets.PAT_TOKEN }}
-      - name: Make script executable
-        run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
-      - name: Generate cookiecutter template
-        run: ./generate-cookiecutter-template-from-example-project.sh
-      - name: Copy generated template to {{cookiecutter.app_name}}
-        run: |
-          rsync -a --delete --exclude='.git' ./example-tryout/ ./{{cookiecutter.app_name}}/
-      - name: Commit & push generated changes
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git diff --cached --quiet || git commit -m "ci: update generated cookiecutter template from example"
-          git push origin ${{ github.head_ref }}
+        run: mvn clean verify -ntp
