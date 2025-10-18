@@ -1,0 +1,56 @@
+name: Generate Template
+on:
+  workflow_dispatch:
+    branches:
+      - main
+jobs:
+  generate-template:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Create new branch
+        id: create_branch
+        run: |
+          # create unique branch name starting with "generated-template"
+          BRANCH="template-$(date +%Y%m%d%H%M%S)"
+          echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git checkout -b "${BRANCH}"
+          git push --set-upstream origin "${BRANCH}"
+      - name: Ensure working on created branch
+        run: |
+          git fetch origin
+          git checkout "${{ steps.create_branch.outputs.branch }}"
+      - name: Make script executable
+        run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
+      - name: Generate cookiecutter template
+        run: ./generate-cookiecutter-template-from-example-project.sh
+      - name: Copy generated template to {{cookiecutter.app_name}}
+        run: |
+          rsync -a --delete --exclude='.git' ./example-template/ ./{{cookiecutter.app_name}}/
+      - name: Commit & push generated changes
+        env:
+          BRANCH: ${{ steps.create_branch.outputs.branch }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git diff --cached --quiet || git commit -m "ci: update generated cookiecutter template from example"
+          git push origin "${BRANCH}"
+      - name: Create Pull Request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          branch: ${{ steps.create_branch.outputs.branch }}
+          title: "ci: update generated cookiecutter template from example"
+          body: |
+            This PR was created automatically by the Generate Template workflow.
+            Contains updates generated from the example project.
+          labels: automated-pr
