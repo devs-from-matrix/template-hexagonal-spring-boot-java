@@ -1,14 +1,14 @@
 #!/bin/bash
 # This script is used to rename files and directories in the example project to that of the cookiecutter template.
 
-# Remove previous example-tryout directory if it exists
-if [ -d "example-tryout" ]; then
-  rm -rf "example-tryout"
+# Remove previous example-template directory if it exists
+if [ -d "example-template" ]; then
+  rm -rf "example-template"
 fi
-# Create a new example-tryout directory and copy the example project into it
-mkdir "example-tryout"
-rsync -a ./example/ ./example-tryout/
-cd ./example-tryout
+# Create a new example-template directory and copy the example project into it
+mkdir "example-template"
+rsync -a ./example/ ./example-template/
+cd ./example-template
 
 # sets the locale for all commands run in the current shell session to the "C" locale, which is the default POSIX locale. This makes programs like sed and find treat files as raw bytes, ignoring any character encoding issues. It helps avoid errors like illegal byte sequence when processing files with mixed or unknown encodings.
 export LC_ALL=C
