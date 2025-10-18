@@ -55,10 +55,11 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
           branch: ${{ steps.prepare_branch.outputs.branch }}
           title: "ci: update generated cookiecutter template from example"
           body: |
             This PR was created automatically by the Generate Template workflow.
             Contains updates generated from the example project.
           labels: automated-pr
-          update-existing-pr: true
+          delete-branch: true
