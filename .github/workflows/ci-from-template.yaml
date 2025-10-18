@@ -28,14 +28,23 @@ jobs:
           # Generate using the config file test-config.yml from the repo root.
           # Use the repo root as the template directory (.) and overwrite any existing generated output.
           cookiecutter --no-input --config-file test-config.yml --overwrite-if-exists --output-dir . .
+      - name: Upload generated cart-service as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cart-service
+          path: ./cart-service
   cart-service-ci:
+    needs: generate-from-template
     defaults:
       run:
         working-directory: ./cart-service
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Download generated cart-service artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cart-service
+          path: .
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
