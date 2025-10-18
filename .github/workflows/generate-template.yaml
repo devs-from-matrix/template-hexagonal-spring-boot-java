@@ -9,42 +9,56 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
-      - name: Create new branch
-        id: create_branch
+      - name: Prepare branch
+        id: prepare_branch
         run: |
           BRANCH="generated-template"
-          echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+          git fetch origin
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-          git checkout -b "${BRANCH}"
-          git push --set-upstream origin "${BRANCH}"
-      - name: Ensure working on created branch
-        run: |
-          git fetch origin
-          git checkout "${{ steps.create_branch.outputs.branch }}"
+
+          if git show-ref --verify --quiet refs/remotes/origin/$BRANCH; then
+            echo "Branch $BRANCH exists — checking it out."
+            git checkout $BRANCH
+            git pull origin $BRANCH
+          else
+            echo "Branch $BRANCH does not exist — creating it."
+            git checkout -b $BRANCH
+            git push --set-upstream origin $BRANCH
+          fi
+          echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+
       - name: Make script executable
         run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
+
       - name: Generate cookiecutter template
         run: ./generate-cookiecutter-template-from-example-project.sh
+
       - name: Copy generated template to {{cookiecutter.app_name}}
         run: |
           rsync -a --delete --exclude='.git' ./example-template/ ./{{cookiecutter.app_name}}/
+
       - name: Commit & push generated changes
         env:
-          BRANCH: ${{ steps.create_branch.outputs.branch }}
+          BRANCH: ${{ steps.prepare_branch.outputs.branch }}
         run: |
           git config --local user.name "github-actions[bot]"
           git add .
-          git diff --cached --quiet || git commit -m "ci: update generated cookiecutter template from example"
-          git push origin "${BRANCH}"
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "ci: update generated cookiecutter template from example"
+            git push origin "${BRANCH}"
+          fi
+
       - name: Create Pull Request
-        id: create_pr
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ steps.create_branch.outputs.branch }}
+          branch: ${{ steps.prepare_branch.outputs.branch }}
           title: "ci: update generated cookiecutter template from example"
           body: |
             This PR was created automatically by the Generate Template workflow.
             Contains updates generated from the example project.
           labels: automated-pr
+          update-existing-pr: true
