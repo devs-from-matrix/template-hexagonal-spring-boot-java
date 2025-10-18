@@ -1,8 +1,6 @@
 name: Generate Template
 on:
   workflow_dispatch:
-    branches:
-      - main
 jobs:
   generate-template:
     runs-on: ubuntu-latest
