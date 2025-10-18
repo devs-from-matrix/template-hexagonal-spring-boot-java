@@ -8,4 +8,4 @@ updates:
     time: "23:30"
   open-pull-requests-limit: 10
   reviewers:
-  - '@devs-from-matrix/app-generator-team'
+  - devs-from-matrix/app-generator-team
