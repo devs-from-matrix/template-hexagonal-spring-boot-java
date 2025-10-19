@@ -12,10 +12,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
-      - name: Create or checkout template branch
+      - name: Prepare branch for generated template
         id: prepare_branch
         run: |
-          BRANCH="generated-template"
+          BRANCH="generated-template-$(date -u +%Y%m%d%H%M%S)"
           echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
           
           git config user.email "github-actions[bot]@users.noreply.github.com"
