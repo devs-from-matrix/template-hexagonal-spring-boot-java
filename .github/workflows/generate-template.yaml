@@ -61,16 +61,19 @@ jobs:
       # Verify commit exists on GitHub
       - name: Verify commit exists on GitHub
         if: steps.commit.outputs.committed == 'true'
+        env:
+          COMMIT_SHA: ${{ steps.commit.outputs.commit_hash }}
+          BRANCH_NAME: ${{ steps.prepare_branch.outputs.branch }}
         run: |
-          echo "Commit SHA: ${{ steps.commit.outputs.commit_hash }}"
+          echo "Commit SHA: ${COMMIT_SHA}"
           echo "Waiting 5 seconds for GitHub to process commit..."
           sleep 5
           
-          git fetch origin ${{ steps.prepare_branch.outputs.branch }}
-          REMOTE_SHA=$(git rev-parse "origin/${{ steps.prepare_branch.outputs.branch }}")
+          git fetch origin ${BRANCH_NAME}
+          REMOTE_SHA=$(git rev-parse "origin/${BRANCH_NAME}")
           echo "Remote HEAD: $REMOTE_SHA"
           
-          if [[ "$REMOTE_SHA" == "${{ steps.commit.outputs.commit_hash }}" ]]; then
+          if [[ "$REMOTE_SHA" == "${COMMIT_SHA}" ]]; then
             echo "✅ Verified: Commit is on GitHub"
           else
             echo "⚠️ Warning: Commit verification failed, but continuing..."
@@ -79,7 +82,7 @@ jobs:
           fi
 
       - name: Create Pull Request
-        if: steps.commit_push.outputs.committed == 'true'
+        if: steps.commit.outputs.committed == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
