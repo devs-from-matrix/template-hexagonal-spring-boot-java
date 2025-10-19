@@ -35,16 +35,17 @@ jobs:
           path: ./cart-service
   cart-service-ci:
     needs: generate-from-template
-    defaults:
-      run:
-        working-directory: ./cart-service
     runs-on: ubuntu-latest
     steps:
       - name: Download generated cart-service artifact
         uses: actions/download-artifact@v4
         with:
           name: cart-service
-          path: .
+          path: ./cart-service
+      - name: Show downloaded files
+        run: |
+          echo "Working dir: $(pwd)"
+          ls -la ./cart-service
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -59,3 +60,4 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Build with Maven
         run: mvn clean verify -ntp
+        working-directory: ./cart-service
