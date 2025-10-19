@@ -5,7 +5,7 @@ on:
       - main
     paths:
       - 'example/**'
-      - '.github/workflows/ci.yaml'
+      - '.github/workflows/ci-for-example.yaml'
   workflow_dispatch:
 jobs:
   example-ci:
