@@ -1,0 +1,63 @@
+name: Continuous Integration From Template
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '{{cookiecutter.app_name}}/**'
+  workflow_dispatch:
+jobs:
+  generate-from-template:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          # checkout the pull request head ref when available, otherwise fallback to the workflow ref
+          ref: ${{ github.head_ref || github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install cookiecutter
+        run: |
+          pip install --upgrade pip cookiecutter
+      - name: Generate from default context (cookiecutter.json)
+        run: |
+          # Generate using the config file test-config.yml from the repo root.
+          # Use the repo root as the template directory (.) and overwrite any existing generated output.
+          cookiecutter --no-input --config-file test-config.yml --overwrite-if-exists --output-dir . .
+      - name: Upload generated cart-service as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cart-service
+          path: ./cart-service
+  cart-service-ci:
+    needs: generate-from-template
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download generated cart-service artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cart-service
+          path: ./cart-service
+      - name: Show downloaded files
+        run: |
+          echo "Working dir: $(pwd)"
+          ls -la ./cart-service
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build with Maven
+        run: git init && mvn clean verify -Dgit-code-format.skip=true -DargLine="--add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED" -ntp
+        working-directory: ./cart-service

@@ -3,8 +3,8 @@
 *.iml
 
 ## Generated projects
-# The generated project from scaffold-code-from-example.sh
-example-tryout
+# The generated project from generate-cookiecutter-template-from-example-project.sh
+example-template
 # The generated project from cookiecutter
 cart-service
 

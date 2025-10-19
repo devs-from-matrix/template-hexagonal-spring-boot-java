@@ -31,7 +31,7 @@
     <jib-maven.plugin.version>3.4.6</jib-maven.plugin.version>
     <git-code-format-maven-plugin.version>5.4</git-code-format-maven-plugin.version>
     <githook-maven-plugin.version>1.0.5</githook-maven-plugin.version>
-    <pitest-maven-plugin.version>1.20.5</pitest-maven-plugin.version>
+    <pitest-maven-plugin.version>1.21.0</pitest-maven-plugin.version>
     <pitest-junit5-plugin.version>1.2.3</pitest-junit5-plugin.version>
   </properties>
   <modules>
@@ -208,36 +208,6 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>com.cosium.code</groupId>
-        <artifactId>git-code-format-maven-plugin</artifactId>
-        <version>${git-code-format-maven-plugin.version}</version>
-        <executions>
-          <!-- On commit, format the modified java files -->
-          <execution>
-            <id>install-formatter-hook</id>
-            <goals>
-              <goal>install-hooks</goal>
-            </goals>
-          </execution>
-          <!-- On Maven verify phase, fail if any file
-          (including unmodified) is badly formatted -->
-          <execution>
-            <id>validate-code-format</id>
-            <goals>
-              <goal>validate-code-format</goal>
-            </goals>
-          </execution>
-        </executions>
-        <dependencies>
-          <!-- Enable https://github.com/google/google-java-format -->
-          <dependency>
-            <groupId>com.cosium.code</groupId>
-            <artifactId>google-java-format</artifactId>
-            <version>${git-code-format-maven-plugin.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      <plugin>
         <groupId>io.github.phillipuniverse</groupId>
         <artifactId>githook-maven-plugin</artifactId>
         <version>${githook-maven-plugin.version}</version>
@@ -251,10 +221,6 @@
                 <pre-commit>
                   echo "Validating..."
                   exec mvn test
-                  echo "Formatting code..."
-                  exec mvn git-code-format:format-code
-                  echo "Validating format..."
-                  exec mvn git-code-format:validate-code-format
                 </pre-commit>
               </hooks>
             </configuration>

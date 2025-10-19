@@ -1,0 +1,32 @@
+name: Continuous Integration For Example Project
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'example/**'
+      - '.github/workflows/ci-for-example.yaml'
+  workflow_dispatch:
+jobs:
+  example-ci:
+    defaults:
+      run:
+        working-directory: ./example
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build with Maven
+        run: mvn clean verify -ntp
