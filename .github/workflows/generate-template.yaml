@@ -14,17 +14,13 @@ jobs:
           ref: main
           token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           persist-credentials: true
+          fetch-depth: '0'
 
       - name: Prepare branch for generated template
         id: prepare_branch
         run: |
           BRANCH="generated-template-$(date -u +%Y%m%d%H%M%S)"
           echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
-          # Configure git to use PAT_TOKEN if available
-          if [ -n "${{ secrets.PAT_TOKEN }}" ]; then
-            echo "Using PAT_TOKEN for authentication"
-            git remote set-url origin "https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
-          fi
 
       - name: Make script executable
         run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
