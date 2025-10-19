@@ -20,20 +20,25 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
+      # 🧩 Configure Git credentials and remote
+      - name: Configure Git auth
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          echo "✅ Git authentication configured."
+
       - name: Prepare or reuse generated-template branch
         id: prepare_branch
         run: |
           BRANCH="generated-template"
           git fetch origin
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
-
           if git show-ref --verify --quiet refs/remotes/origin/$BRANCH; then
-            echo "Branch exists — checking out and pulling latest"
+            echo "Branch exists — checking out and pulling latest."
             git checkout $BRANCH
             git pull origin $BRANCH
           else
-            echo "Branch does not exist — creating new one"
+            echo "Branch does not exist — creating new one."
             git checkout -b $BRANCH
             git push --set-upstream origin $BRANCH
           fi
@@ -49,7 +54,7 @@ jobs:
         run: |
           rsync -a --delete --exclude='.git' ./example-template/ ./{{cookiecutter.app_name}}/
 
-      - name: Commit changes
+      - name: Commit and push changes
         id: commit
         run: |
           git add .
@@ -60,6 +65,28 @@ jobs:
             git commit -m "ci: update generated cookiecutter template from example"
             git push origin generated-template
             echo "no_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 🧪 Verify that the commit is visible on GitHub
+      - name: Verify commit visibility
+        if: steps.commit.outputs.no_changes == 'false'
+        run: |
+          echo "🧾 Local HEAD commit:"
+          git log -1 --oneline
+
+          echo "⏳ Waiting a few seconds for GitHub to index the push..."
+          sleep 5
+
+          git fetch origin generated-template
+          echo "🧾 Remote branch HEAD:"
+          git log origin/generated-template -1 --oneline
+
+          LOCAL_SHA=$(git rev-parse HEAD)
+          REMOTE_SHA=$(git rev-parse origin/generated-template)
+          if [ "$LOCAL_SHA" = "$REMOTE_SHA" ]; then
+            echo "✅ Verified: commit is on GitHub."
+          else
+            echo "⚠️ Warning: commit not yet visible remotely (may take a few seconds)."
           fi
 
       - name: Create or Update Pull Request
