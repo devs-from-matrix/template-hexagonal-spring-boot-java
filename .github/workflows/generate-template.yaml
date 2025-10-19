@@ -64,6 +64,16 @@ jobs:
             echo "no_changes=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Show local and remote commits
+        run: |
+          echo "🧾 Local HEAD:"
+          git log -1 --oneline
+          echo
+          echo "Fetching remote..."
+          git fetch origin generated-template
+          echo "🧾 Remote HEAD:"
+          git log origin/generated-template -1 --oneline
+
       - name: Create or update Pull Request
         if: steps.commit.outputs.no_changes == 'false'
         uses: peter-evans/create-pull-request@v7
