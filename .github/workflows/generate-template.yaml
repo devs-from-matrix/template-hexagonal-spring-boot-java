@@ -12,21 +12,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout main branch
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
           ref: main
-          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-          persist-credentials: true
           fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}   # ✅ proven token that works
 
-      # 🧩 Configure Git credentials and remote
-      - name: Configure Git auth
+      - name: Configure Git for push
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin "https://${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
-          echo "✅ Git authentication configured."
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git"
 
       - name: Prepare or reuse generated-template branch
         id: prepare_branch
@@ -34,13 +31,13 @@ jobs:
           BRANCH="generated-template"
           git fetch origin
           if git show-ref --verify --quiet refs/remotes/origin/$BRANCH; then
-            echo "Branch exists — checking out and pulling latest."
+            echo "Branch exists — checking it out."
             git checkout $BRANCH
             git pull origin $BRANCH
           else
-            echo "Branch does not exist — creating new one."
+            echo "Branch does not exist — creating it."
             git checkout -b $BRANCH
-            git push --set-upstream origin $BRANCH
+            git push -u origin $BRANCH
           fi
           echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
 
@@ -53,12 +50,6 @@ jobs:
       - name: Copy generated template to {{cookiecutter.app_name}}
         run: |
           rsync -a --delete --exclude='.git' ./example-template/ ./{{cookiecutter.app_name}}/
-
-      - name: Debug Git remote info
-        run: |
-          git remote -v
-          git branch --show-current
-          git status
 
       - name: Commit and push changes
         id: commit
@@ -73,33 +64,11 @@ jobs:
             echo "no_changes=false" >> $GITHUB_OUTPUT
           fi
 
-      # 🧪 Verify that the commit is visible on GitHub
-      - name: Verify commit visibility
-        if: steps.commit.outputs.no_changes == 'false'
-        run: |
-          echo "🧾 Local HEAD commit:"
-          git log -1 --oneline
-
-          echo "⏳ Waiting a few seconds for GitHub to index the push..."
-          sleep 5
-
-          git fetch origin generated-template
-          echo "🧾 Remote branch HEAD:"
-          git log origin/generated-template -1 --oneline
-
-          LOCAL_SHA=$(git rev-parse HEAD)
-          REMOTE_SHA=$(git rev-parse origin/generated-template)
-          if [ "$LOCAL_SHA" = "$REMOTE_SHA" ]; then
-            echo "✅ Verified: commit is on GitHub."
-          else
-            echo "⚠️ Warning: commit not yet visible remotely (may take a few seconds)."
-          fi
-
-      - name: Create or Update Pull Request
+      - name: Create or update Pull Request
         if: steps.commit.outputs.no_changes == 'false'
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}   # ✅ use same working PAT
           base: main
           branch: ${{ steps.prepare_branch.outputs.branch }}
           title: "ci: update generated cookiecutter template from example"
