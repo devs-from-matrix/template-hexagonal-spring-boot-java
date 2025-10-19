@@ -64,20 +64,12 @@ jobs:
 #            echo "no_changes=false" >> $GITHUB_OUTPUT
 #          fi
       - name: Commit and push changes
+        id: commit
         run: |
           git add .
           git commit -m "feat: update generated cookiecutter template from example"
           git push origin generated-template
-
-      - name: Show local and remote commits
-        run: |
-          echo "🧾 Local HEAD:"
-          git log -1 --oneline
-          echo
-          echo "Fetching remote..."
-          git fetch origin generated-template
-          echo "🧾 Remote HEAD:"
-          git log origin/generated-template -1 --oneline
+          echo "no_changes=false" >> $GITHUB_OUTPUT
 
       - name: Create or update Pull Request
         if: steps.commit.outputs.no_changes == 'false'
