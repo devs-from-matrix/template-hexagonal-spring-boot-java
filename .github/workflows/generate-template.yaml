@@ -54,7 +54,6 @@ jobs:
           author_name: GitHub Actions Bot
           author_email: github-actions[bot]@users.noreply.github.com
           default_author: github_actions
-          github_token: ${{ secrets.PAT_TOKEN || github.token }}
           cwd: "."
           new_branch: ${{ steps.prepare_branch.outputs.branch }}
 
@@ -62,14 +61,10 @@ jobs:
       - name: Verify commit exists on GitHub
         if: steps.commit.outputs.committed == 'true'
         env:
-          COMMIT_SHA: ${{ steps.commit.outputs.commit_hash }}
           BRANCH_NAME: ${{ steps.prepare_branch.outputs.branch }}
         run: |
           echo "Step outputs from commit action:"
-          echo "committed: ${{ steps.commit.outputs.committed }}"
-          echo "commit_hash: ${{ steps.commit.outputs.commit_long_sha }}"
-          echo "All outputs: ${{ toJson(steps.commit.outputs) }}"
-          echo "Commit SHA env: ${COMMIT_SHA}"  
+          echo "Commit SHA: ${{ steps.commit.outputs.commit_long_sha }}"  
           echo "Waiting 5 seconds for GitHub to process commit..."
           sleep 5
           
