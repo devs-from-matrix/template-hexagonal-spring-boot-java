@@ -65,7 +65,11 @@ jobs:
           COMMIT_SHA: ${{ steps.commit.outputs.commit_hash }}
           BRANCH_NAME: ${{ steps.prepare_branch.outputs.branch }}
         run: |
-          echo "Commit SHA: ${COMMIT_SHA}"
+          echo "Step outputs from commit action:"
+          echo "committed: ${{ steps.commit.outputs.committed }}"
+          echo "commit_hash: ${{ steps.commit.outputs.commit_hash }}"
+          echo "All outputs: ${{ toJson(steps.commit.outputs) }}"
+          echo "Commit SHA env: ${COMMIT_SHA}"  
           echo "Waiting 5 seconds for GitHub to process commit..."
           sleep 5
           
