@@ -56,7 +56,7 @@ jobs:
           default_author: github_actions
           github_token: ${{ secrets.PAT_TOKEN || github.token }}
           cwd: "."
-          branch: ${{ steps.prepare_branch.outputs.branch }}
+          new_branch: ${{ steps.prepare_branch.outputs.branch }}
 
       # Verify commit exists on GitHub
       - name: Verify commit exists on GitHub
