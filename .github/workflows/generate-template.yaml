@@ -65,7 +65,6 @@ jobs:
 #          fi
       - name: Commit and push changes
         run: |
-          echo "Updated at $(date -u)" >> push-test.txt
           git add .
           git commit -m "feat: update generated cookiecutter template from example"
           git push origin generated-template
