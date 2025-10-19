@@ -1,4 +1,7 @@
 name: Generate Template
+permissions:
+  contents: write
+  pull-requests: write
 on:
   workflow_dispatch:
 jobs:
@@ -9,6 +12,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
+          # Ensure we have full history and credentials
+          fetch-depth: 0
+          persist-credentials: true
+          # Use PAT if available, fallback to default token
+          token: ${{ secrets.PAT_TOKEN || github.token }}
       - name: Prepare branch
         id: prepare_branch
         run: |
@@ -42,16 +50,66 @@ jobs:
         id: commit_push
         env:
           BRANCH: ${{ steps.prepare_branch.outputs.branch }}
+          # Optional: use PAT_TOKEN for push authentication if available
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
+          # Set Git identity
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          
+          # Configure remote with PAT if available (handles org restrictions)
+          if [ -n "${PAT_TOKEN:-}" ]; then
+            echo "Using PAT for authentication"
+            git remote set-url origin "https://x-access-token:${PAT_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          fi
+          
+          # Show remote config (redacts credentials)
+          git remote -v
+          
+          # Stage changes
           git add .
+          
           if git diff --cached --quiet; then
             echo "No changes to commit."
             echo "committed=false" >> $GITHUB_OUTPUT
           else
+            # Show what will be committed
+            echo "Changes to be committed:"
+            git diff --cached --name-status
+            
+            # Commit changes
             git commit -m "ci: update generated cookiecutter template from example"
-            git push origin "${BRANCH}"
-            echo "committed=true" >> $GITHUB_OUTPUT
+            
+            echo "Branch to push: ${BRANCH}"
+            
+            # Enable Git debugging
+            export GIT_TRACE=1
+            export GIT_CURL_VERBOSE=1
+            
+            # Push with explicit refspec and set-upstream to ensure tracking
+            echo "Pushing to origin/${BRANCH}..."
+            if git push --set-upstream origin "${BRANCH}:${BRANCH}" --porcelain; then
+              echo "Push succeeded"
+              echo "Verifying remote commit exists..."
+              # Fetch latest from remote to verify push worked
+              git fetch origin "${BRANCH}"
+              LOCAL_SHA=$(git rev-parse HEAD)
+              REMOTE_SHA=$(git rev-parse "origin/${BRANCH}")
+              echo "Local HEAD: ${LOCAL_SHA}"
+              echo "Remote HEAD: ${REMOTE_SHA}"
+              if [ "$LOCAL_SHA" = "$REMOTE_SHA" ]; then
+                echo "✅ Verified: remote commit matches local commit"
+                echo "committed=true" >> $GITHUB_OUTPUT
+              else
+                echo "❌ Error: Remote HEAD differs from local HEAD!"
+                echo "committed=false" >> $GITHUB_OUTPUT
+                exit 1
+              fi
+            else
+              echo "❌ Push failed!"
+              echo "committed=false" >> $GITHUB_OUTPUT
+              exit 1
+            fi
           fi
 
       - name: Create Pull Request
