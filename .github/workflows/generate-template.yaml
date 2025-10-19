@@ -15,16 +15,16 @@ jobs:
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
-#        with:
-#          ref: main
-#          fetch-depth: 0
-#          token: ${{ secrets.PAT_TOKEN }}
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
 
-#      - name: Configure Git for push
-#        run: |
-#          git config user.name "github-actions[bot]"
-#          git config user.email "github-actions[bot]@users.noreply.github.com"
-#          git remote set-url origin "https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git"
+      - name: Configure Git for push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git"
 
       - name: Check Branch & PR
         id: check_branch_pr
