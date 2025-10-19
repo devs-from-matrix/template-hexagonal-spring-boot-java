@@ -70,7 +70,6 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.PAT_TOKEN }}   # ✅ use same working PAT
-          base: main
           branch: ${{ steps.prepare_branch.outputs.branch }}
           title: "ci: update generated cookiecutter template from example"
           body: |
