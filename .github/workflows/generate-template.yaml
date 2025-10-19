@@ -39,6 +39,7 @@ jobs:
           rsync -a --delete --exclude='.git' ./example-template/ ./{{cookiecutter.app_name}}/
 
       - name: Commit & push generated changes
+        id: commit_push
         env:
           BRANCH: ${{ steps.prepare_branch.outputs.branch }}
         run: |
@@ -46,12 +47,15 @@ jobs:
           git add .
           if git diff --cached --quiet; then
             echo "No changes to commit."
+            echo "committed=false" >> $GITHUB_OUTPUT
           else
             git commit -m "ci: update generated cookiecutter template from example"
             git push origin "${BRANCH}"
+            echo "committed=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Create Pull Request
+        if: steps.commit_push.outputs.committed == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -62,4 +66,4 @@ jobs:
             This PR was created automatically by the Generate Template workflow.
             Contains updates generated from the example project.
           labels: automated-pr
-          delete-branch: true
+          delete-branch: false
