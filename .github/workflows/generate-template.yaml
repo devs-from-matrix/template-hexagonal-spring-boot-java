@@ -25,21 +25,54 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git"
 
-      - name: Prepare or reuse generated-template branch
-        id: prepare_branch
+#      - name: Prepare or reuse generated-template branch
+#        id: prepare_branch
+#        run: |
+#          BRANCH="generated-template"
+#          git fetch origin
+#          if git show-ref --verify --quiet refs/remotes/origin/$BRANCH; then
+#            echo "Branch exists — checking it out."
+#            git checkout $BRANCH
+#            git pull origin $BRANCH
+#          else
+#            echo "Branch does not exist — creating it."
+#            git checkout -b $BRANCH
+#            git push -u origin $BRANCH
+#          fi
+#          echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+
+      - name: Check Branch & PR
+        id: check_branch_pr
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}   # PAT or GITHUB_TOKEN with write access
         run: |
           BRANCH="generated-template"
           git fetch origin
+      
+          # --- Check if branch exists remotely ---
           if git show-ref --verify --quiet refs/remotes/origin/$BRANCH; then
-            echo "Branch exists — checking it out."
+            echo "✅ Branch $BRANCH exists remotely."
             git checkout $BRANCH
             git pull origin $BRANCH
+            echo "branch_exists=true" >> $GITHUB_OUTPUT
           else
-            echo "Branch does not exist — creating it."
+            echo "🚫 Branch $BRANCH does not exist."
             git checkout -b $BRANCH
             git push -u origin $BRANCH
+            echo "branch_exists=false" >> $GITHUB_OUTPUT
           fi
           echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+      
+          # --- Check if PR already exists for this branch ---
+          OPEN_PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')
+          if [ -n "$OPEN_PR" ]; then
+            echo "open_pr=true" >> $GITHUB_OUTPUT
+            echo "open_pr_number=$OPEN_PR" >> $GITHUB_OUTPUT
+            echo "📬 Open PR #$OPEN_PR found for branch $BRANCH."
+          else
+            echo "open_pr=false" >> $GITHUB_OUTPUT
+            echo "📭 No open PR found for branch $BRANCH."
+          fi
 
       - name: Make script executable
         run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
@@ -61,20 +94,16 @@ jobs:
           else
             git commit -m "ci: update generated cookiecutter template from example"
             git push origin generated-template
-            sleep 10
             echo "no_changes=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Create or update Pull Request
-        if: steps.commit.outputs.no_changes == 'false'
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.PAT_TOKEN }}   # ✅ use same working PAT
-          branch: ${{ steps.prepare_branch.outputs.branch }}
-          title: "ci: update generated cookiecutter template from example"
-          body: |
-            This PR was created automatically by the Generate Template workflow.
-            It contains updates generated from the example project.
-          commit-message: "ci: update generated cookiecutter template from example"
-          labels: automated-pr
-          delete-branch: false
+        if: steps.commit.outputs.no_changes == 'false' && steps.check_branch_pr.outputs.open_pr == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          gh pr create \
+            --base main \
+            --head generated-template \
+            --title "ci: update generated cookiecutter template from example" \
+            --body "Automated PR created by workflow."
