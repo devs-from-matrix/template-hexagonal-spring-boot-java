@@ -54,6 +54,12 @@ jobs:
         run: |
           rsync -a --delete --exclude='.git' ./example-template/ ./{{cookiecutter.app_name}}/
 
+      - name: Debug Git remote info
+        run: |
+          git remote -v
+          git branch --show-current
+          git status
+
       - name: Commit and push changes
         id: commit
         run: |
