@@ -19,8 +19,15 @@ jobs:
       - name: Prepare branch for generated template
         id: prepare_branch
         run: |
-          BRANCH="generated-template-$(date -u +%Y%m%d%H%M%S)"
+          BRANCH="generated-template"
           echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+          git fetch origin
+          if git show-ref --verify --quiet refs/remotes/origin/$BRANCH; then
+            git checkout $BRANCH
+            git pull origin $BRANCH
+          else
+            git checkout -b $BRANCH
+          fi
 
       - name: Make script executable
         run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
@@ -44,7 +51,6 @@ jobs:
           author_email: github-actions[bot]@users.noreply.github.com
           default_author: github_actions
           cwd: "."
-          new_branch: ${{ steps.prepare_branch.outputs.branch }}
 
       # Verify commit exists on GitHub
       - name: Verify commit exists on GitHub
