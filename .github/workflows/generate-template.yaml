@@ -67,7 +67,7 @@ jobs:
         run: |
           echo "Step outputs from commit action:"
           echo "committed: ${{ steps.commit.outputs.committed }}"
-          echo "commit_hash: ${{ steps.commit.outputs.commit_hash }}"
+          echo "commit_hash: ${{ steps.commit.outputs.commit_long_sha }}"
           echo "All outputs: ${{ toJson(steps.commit.outputs) }}"
           echo "Commit SHA env: ${COMMIT_SHA}"  
           echo "Waiting 5 seconds for GitHub to process commit..."
@@ -77,7 +77,7 @@ jobs:
           REMOTE_SHA=$(git rev-parse "origin/${BRANCH_NAME}")
           echo "Remote HEAD: $REMOTE_SHA"
           
-          if [[ "$REMOTE_SHA" == "${COMMIT_SHA}" ]]; then
+          if [[ "$REMOTE_SHA" == "${{ steps.commit.outputs.commit_long_sha }}" ]]; then
             echo "✅ Verified: Commit is on GitHub"
           else
             echo "⚠️ Warning: Commit verification failed, but continuing..."
