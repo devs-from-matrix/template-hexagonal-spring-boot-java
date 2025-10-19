@@ -51,18 +51,24 @@ jobs:
         run: |
           rsync -a --delete --exclude='.git' ./example-template/ ./{{cookiecutter.app_name}}/
 
-      - name: Commit and push changes
-        id: commit
+#      - name: Commit and push changes
+#        id: commit
+#        run: |
+#          git add .
+#          if git diff --cached --quiet; then
+#            echo "no_changes=true" >> $GITHUB_OUTPUT
+#            echo "✅ No changes detected."
+#          else
+#            git commit -m "ci: update generated cookiecutter template from example"
+#            git push origin generated-template
+#            echo "no_changes=false" >> $GITHUB_OUTPUT
+#          fi
+      - name: Append timestamp
         run: |
-          git add .
-          if git diff --cached --quiet; then
-            echo "no_changes=true" >> $GITHUB_OUTPUT
-            echo "✅ No changes detected."
-          else
-            git commit -m "ci: update generated cookiecutter template from example"
-            git push origin generated-template
-            echo "no_changes=false" >> $GITHUB_OUTPUT
-          fi
+          echo "Updated at $(date -u)" >> push-test.txt
+          git add push-test.txt
+          git commit -m "test: append timestamp"
+          git push origin generated-template
 
       - name: Show local and remote commits
         run: |
