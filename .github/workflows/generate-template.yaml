@@ -63,11 +63,11 @@ jobs:
 #            git push origin generated-template
 #            echo "no_changes=false" >> $GITHUB_OUTPUT
 #          fi
-      - name: Append timestamp
+      - name: Commit and push changes
         run: |
           echo "Updated at $(date -u)" >> push-test.txt
-          git add push-test.txt
-          git commit -m "test: append timestamp"
+          git add .
+          git commit -m "feat: update generated cookiecutter template from example"
           git push origin generated-template
 
       - name: Show local and remote commits
