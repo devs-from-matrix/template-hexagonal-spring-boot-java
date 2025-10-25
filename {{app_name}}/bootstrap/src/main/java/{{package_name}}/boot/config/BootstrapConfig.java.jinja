@@ -1,0 +1,19 @@
+package {{package_name}}.boot.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import {{package_name}}.domain.{{domain_capitalized}}Domain;
+import {{package_name}}.domain.port.Obtain{{domain_capitalized}};
+import {{package_name}}.domain.port.Request{{domain_capitalized}};
+import {{package_name}}.repository.config.JpaAdapterConfig;
+
+@Configuration
+@Import(JpaAdapterConfig.class)
+public class BootstrapConfig {
+
+  @Bean
+  public Request{{domain_capitalized}} getRequest{{domain_capitalized}}(Obtain{{domain_capitalized}} obtain{{domain_capitalized}}) {
+    return new {{domain_capitalized}}Domain(obtain{{domain_capitalized}});
+  }
+}

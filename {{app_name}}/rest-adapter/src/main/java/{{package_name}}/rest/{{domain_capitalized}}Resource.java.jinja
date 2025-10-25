@@ -1,0 +1,27 @@
+package {{package_name}}.rest;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import {{package_name}}.domain.model.{{domain_capitalized}};
+import {{package_name}}.domain.port.Request{{domain_capitalized}};
+import {{package_name}}.rest.generated.api.{{domain_capitalized}}Api;
+import {{package_name}}.rest.generated.model.{{domain_capitalized}}Info;
+
+@RestController
+public class {{domain_capitalized}}Resource implements {{domain_capitalized}}Api {
+
+  private final Request{{domain_capitalized}} request{{domain_capitalized}};
+
+  public {{domain_capitalized}}Resource(Request{{domain_capitalized}} request{{domain_capitalized}}) {
+    this.request{{domain_capitalized}} = request{{domain_capitalized}};
+  }
+
+  public ResponseEntity<{{domain_capitalized}}Info> get{{domain_plural_capitalized}}() {
+    return ResponseEntity.ok({{domain_capitalized}}Info.builder().{{domain_plural}}(request{{domain_capitalized}}.get{{domain_plural_capitalized}}()).build());
+  }
+
+  public ResponseEntity<{{domain_capitalized}}> get{{domain_capitalized}}ByCode(@PathVariable("code") Long code) {
+    return ResponseEntity.ok(request{{domain_capitalized}}.get{{domain_capitalized}}ByCode(code));
+  }
+}

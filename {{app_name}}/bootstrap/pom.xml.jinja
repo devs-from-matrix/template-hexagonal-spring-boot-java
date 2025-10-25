@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>{{group_id}}</groupId>
+    <artifactId>{{artifact_id}}-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>bootstrap</artifactId>
+  <properties>
+    <start-class>{{package_name}}.boot.{{domain_capitalized}}Application</start-class>
+  </properties>
+  <dependencies>
+    <!-- left adapter -->
+    <dependency>
+      <groupId>{{group_id}}</groupId>
+      <artifactId>rest-adapter</artifactId>
+    </dependency>
+    <!-- domain -->
+    <dependency>
+      <groupId>{{group_id}}</groupId>
+      <artifactId>domain</artifactId>
+    </dependency>
+    <!-- right adapter -->
+    <dependency>
+      <groupId>{{group_id}}</groupId>
+      <artifactId>jpa-adapter</artifactId>
+    </dependency>
+    <!-- temporary database -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- Frameworks & Libraries -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+    </dependency>
+  </dependencies>
+  <build>
+    <finalName>{{domain}}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <classifier>exec</classifier>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.societegenerale.commons</groupId>
+        <artifactId>arch-unit-maven-plugin</artifactId>
+        <configuration>
+          <rules>
+            <preConfiguredRules>
+              <rule>com.societegenerale.commons.plugin.rules.NoStandardStreamRuleTest</rule>
+              <rule>com.societegenerale.commons.plugin.rules.NoJodaTimeRuleTest</rule>
+              <rule>com.societegenerale.commons.plugin.rules.NoJavaUtilDateRuleTest</rule>
+              <rule>com.societegenerale.commons.plugin.rules.NoPrefixForInterfacesRuleTest</rule>
+              <rule>com.societegenerale.commons.plugin.rules.NoPublicFieldRuleTest</rule>
+              <rule>com.societegenerale.commons.plugin.rules.NoInjectedFieldTest</rule>
+              <rule>com.societegenerale.commons.plugin.rules.NoAutowiredFieldTest</rule>
+            </preConfiguredRules>
+          </rules>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

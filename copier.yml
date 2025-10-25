@@ -1,0 +1,57 @@
+app_name:
+  type: str
+  help: "Short project name (e.g., myapp)"
+  default: "cart-service"
+
+app_title:
+  type: str
+  help: "Project title"
+  default: "{{ app_name|capitalize }}"
+
+domain:
+  type: str
+  help: "Domain name (e.g., user, order)"
+  default: "cart"
+
+domain_capitalized:
+  type: str
+  help: "Domain name, capitalized"
+  default: "{{ domain|capitalize }}"
+
+domain_uppercase:
+  type: str
+  help: "Domain name, uppercase"
+  default: "{{ domain|upper }}"
+
+domain_plural:
+  type: str
+  help: "Plural form of domain"
+  default: "{% if app_name.endswith('y') %}{{ domain.replace('y', '') }}ies{% else %}{{ domain.lower() }}s{% endif %}"
+
+domain_plural_capitalized:
+  type: str
+  help: "Plural domain, capitalized"
+  default: "{{ domain_plural|capitalize }}"
+
+domain_plural_uppercase:
+  type: str
+  help: "Plural domain, uppercase"
+  default: "{{ domain_plural|upper }}"
+
+group_id:
+  type: str
+  help: "Maven groupId"
+  default: "org.{{ domain }}"
+
+artifact_id:
+  type: str
+  help: "Maven artifactId"
+  default: "{{ domain }}"
+
+package_name:
+  type: str
+  help: "Base package name"
+  default: "{{ group_id }}"
+
+_copy_without_render:
+  - .github

@@ -1,0 +1,12 @@
+package {{package_name}}.domain.port;
+
+import java.util.List;
+import lombok.NonNull;
+import {{package_name}}.domain.model.{{domain_capitalized}};
+
+public interface Request{{domain_capitalized}} {
+
+  List<{{domain_capitalized}}> get{{domain_plural_capitalized}}();
+
+  {{domain_capitalized}} get{{domain_capitalized}}ByCode(@NonNull Long code);
+}

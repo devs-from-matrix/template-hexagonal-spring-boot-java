@@ -1,3 +1,0 @@
-default_context:
-  app_name: "cart-service"
-  domain: "cart"
