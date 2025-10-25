@@ -26,7 +26,7 @@ domain_uppercase:
 domain_plural:
   type: str
   help: "Plural form of domain"
-  default: "{% if app_name.endswith('y') %}{{ domain.replace('y', '') }}ies{% else %}{{ domain.lower() }}s{% endif %}"
+  default: "{% if domain.endswith('y') %}{{ domain.replace('y', '') }}ies{% else %}{{ domain.lower() }}s{% endif %}"
 
 domain_plural_capitalized:
   type: str
