@@ -1,0 +1,122 @@
+package {{package_name}}.cucumber;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java8.En;
+import io.cucumber.java8.HookNoArgsBody;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import {{package_name}}.domain.model.{{domain_capitalized}};
+import {{package_name}}.repository.dao.{{domain_capitalized}}Dao;
+import {{package_name}}.repository.entity.{{domain_capitalized}}Entity;
+import {{package_name}}.rest.generated.model.{{domain_capitalized}}Info;
+import {{package_name}}.rest.generated.model.ProblemDetail;
+
+public class {{domain_capitalized}}StepDef implements En {
+
+  private static final String LOCALHOST = "http://localhost:";
+  private static final String API_URI = "/api/v1/{{domain_plural}}";
+  @LocalServerPort private int port;
+  private ResponseEntity responseEntity;
+
+  public {{domain_capitalized}}StepDef(TestRestTemplate restTemplate, {{domain_capitalized}}Dao {{domain}}Dao) {
+
+    DataTableType(
+        (Map<String, String> row) ->
+            {{domain_capitalized}}.builder()
+                .code(Long.parseLong(row.get("code")))
+                .description(row.get("description"))
+                .build());
+    DataTableType(
+        (Map<String, String> row) ->
+            {{domain_capitalized}}Entity.builder()
+                .code(Long.parseLong(row.get("code")))
+                .description(row.get("description"))
+                .build());
+
+    Before((HookNoArgsBody) {{domain}}Dao::deleteAll);
+    After((HookNoArgsBody) {{domain}}Dao::deleteAll);
+
+    Given(
+        "the following {{domain_plural}} exists in the library",
+        (DataTable dataTable) -> {
+          List<{{domain_capitalized}}Entity> poems = dataTable.asList({{domain_capitalized}}Entity.class);
+          {{domain}}Dao.saveAll(poems);
+        });
+
+    When(
+        "user requests for all {{domain_plural}}",
+        () -> {
+          String url = LOCALHOST + port + API_URI;
+          responseEntity = restTemplate.getForEntity(url, {{domain_capitalized}}Info.class);
+        });
+
+    When(
+        "user requests for {{domain_plural}} by code {string}",
+        (String code) -> {
+          String url = LOCALHOST + port + API_URI + "/" + code;
+          responseEntity = restTemplate.getForEntity(url, {{domain_capitalized}}.class);
+        });
+
+    When(
+        "user requests for {{domain_plural}} by id {string} that does not exists",
+        (String code) -> {
+          String url = LOCALHOST + port + API_URI + "/" + code;
+          responseEntity = restTemplate.getForEntity(url, ProblemDetail.class);
+        });
+
+    Then(
+        "the user gets an exception {string}",
+        (String exception) -> {
+          assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+          var actualResponse = (ProblemDetail) responseEntity.getBody();
+          var expectedProblemDetail =
+              ProblemDetail.builder()
+                  .type("https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404")
+                  .status(HttpStatus.NOT_FOUND.value())
+                  .detail("{{domain_capitalized}} with code 10000 does not exist")
+                  .instance("/api/v1/{{domain_plural}}/10000")
+                  .title("{{domain_capitalized}} not found")
+                  .build();
+          assertThat(actualResponse).isNotNull();
+          assertThat(actualResponse)
+              .usingRecursiveComparison()
+              .ignoringFields("timestamp")
+              .isEqualTo(expectedProblemDetail);
+          assertThat(actualResponse.getTimestamp())
+              .isCloseTo(LocalDateTime.now(), within(100L, ChronoUnit.SECONDS));
+        });
+
+    Then(
+        "the user gets the following {{domain_plural}}",
+        (DataTable dataTable) -> {
+          List<{{domain_capitalized}}> expected{{domain_plural_capitalized}} = dataTable.asList({{domain_capitalized}}.class);
+          assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+          Object body = responseEntity.getBody();
+          assertThat(body).isNotNull();
+          if (body instanceof {{domain_capitalized}}Info) {
+            assertThat((({{domain_capitalized}}Info) body).get{{domain_plural_capitalized}}())
+                .isNotEmpty()
+                .extracting("description")
+                .containsAll(
+                    expected{{domain_plural_capitalized}}.stream()
+                        .map({{domain_capitalized}}::getDescription)
+                        .collect(Collectors.toList()));
+          } else if (body instanceof {{domain_capitalized}}) {
+            assertThat(body)
+                .isNotNull()
+                .extracting("description")
+                .isEqualTo(expected{{domain_plural_capitalized}}.get(0).getDescription());
+          }
+        });
+  }
+}

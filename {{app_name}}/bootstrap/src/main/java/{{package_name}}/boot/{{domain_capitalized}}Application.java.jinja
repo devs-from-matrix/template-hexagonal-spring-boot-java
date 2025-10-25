@@ -1,0 +1,14 @@
+package {{package_name}}.boot;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
+@SpringBootApplication
+@ComponentScan(basePackages = "{{package_name}}")
+public class {{domain_capitalized}}Application {
+
+  public static void main(String[] args) {
+    SpringApplication.run({{domain_capitalized}}Application.class, args);
+  }
+}

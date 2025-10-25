@@ -1,0 +1,23 @@
+package {{package_name}}.repository.config;
+
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.envers.repository.support.EnversRevisionRepositoryFactoryBean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import {{package_name}}.domain.port.Obtain{{domain_capitalized}};
+import {{package_name}}.repository.{{domain_capitalized}}Repository;
+import {{package_name}}.repository.dao.{{domain_capitalized}}Dao;
+
+@Configuration
+@EntityScan("{{package_name}}.repository.entity")
+@EnableJpaRepositories(
+    basePackages = "{{package_name}}.repository.dao",
+    repositoryFactoryBeanClass = EnversRevisionRepositoryFactoryBean.class)
+public class JpaAdapterConfig {
+
+  @Bean
+  public Obtain{{domain_capitalized}} get{{domain_capitalized}}Repository({{domain_capitalized}}Dao {{domain}}Dao) {
+    return new {{domain_capitalized}}Repository({{domain}}Dao);
+  }
+}

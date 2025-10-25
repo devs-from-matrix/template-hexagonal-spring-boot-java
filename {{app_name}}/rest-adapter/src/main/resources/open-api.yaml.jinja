@@ -1,0 +1,76 @@
+---
+openapi: 3.0.1
+info:
+  title: {{domain_capitalized}} API Documentation
+  version: v1
+tags:
+  - name: {{domain_capitalized}}
+    description: Resource to manage {{domain}}
+paths:
+  "/api/v1/{{domain_plural}}":
+    get:
+      tags:
+        - {{domain_capitalized}}
+      summary: Get all {{domain_plural}}
+      operationId: get{{domain_plural_capitalized}}
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/{{domain_capitalized}}Info"
+  "/api/v1/{{domain_plural}}/{code}":
+    get:
+      tags:
+        - {{domain_capitalized}}
+      summary: Get {{domain}} by code
+      operationId: get{{domain_capitalized}}ByCode
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/{{domain_capitalized}}"
+components:
+  schemas:
+    {{domain_capitalized}}:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int64
+        description:
+          type: string
+    {{domain_capitalized}}Info:
+      type: object
+      properties:
+        {{domain_plural}}:
+          type: array
+          items:
+            "$ref": "#/components/schemas/{{domain_capitalized}}"
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+        timestamp:
+          type: string
+          format: date-time

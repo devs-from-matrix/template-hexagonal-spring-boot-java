@@ -1,0 +1,92 @@
+package {{package_name}};
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import {{package_name}}.domain.{{domain_capitalized}}Domain;
+import {{package_name}}.domain.exception.{{domain_capitalized}}NotFoundException;
+import {{package_name}}.domain.model.{{domain_capitalized}};
+import {{package_name}}.domain.port.Obtain{{domain_capitalized}};
+
+@ExtendWith(MockitoExtension.class)
+public class AcceptanceTest {
+
+  @Test
+  @DisplayName("should be able to get {{domain_plural}} when asked for {{domain_plural}} from hard coded {{domain_plural}}")
+  public void get{{domain_plural_capitalized}}FromHardCoded() {
+    /*
+       Request{{domain_capitalized}}    - left side port
+       {{domain_capitalized}}Domain     - hexagon (domain)
+       Obtain{{domain_capitalized}}     - right side port
+    */
+    var request{{domain_capitalized}} = new {{domain_capitalized}}Domain(); // the {{domain}} is hard coded
+    var {{domain_plural}} = request{{domain_capitalized}}.get{{domain_plural_capitalized}}();
+    assertThat({{domain_plural}})
+        .hasSize(1)
+        .extracting("description")
+        .contains(
+            "If you could read a leaf or tree\r\nyoud have no need of books.\r\n-- Alistair Cockburn (1987)");
+  }
+
+  @Test
+  @DisplayName("should be able to get {{domain_plural}} when asked for {{domain_plural}} from stub")
+  public void get{{domain_plural_capitalized}}FromMockedStub(@Mock Obtain{{domain_capitalized}} obtain{{domain_capitalized}}) {
+    // Stub
+    var {{domain}} =
+        {{domain_capitalized}}.builder()
+            .code(1L)
+            .description(
+                "I want to sleep\r\nSwat the flies\r\nSoftly, please.\r\n\r\n-- Masaoka Shiki (1867-1902)")
+            .build();
+    Mockito.lenient().when(obtain{{domain_capitalized}}.getAll{{domain_plural_capitalized}}()).thenReturn(List.of({{domain}}));
+    // hexagon
+    var request{{domain_capitalized}} = new {{domain_capitalized}}Domain(obtain{{domain_capitalized}});
+    var {{domain_plural}} = request{{domain_capitalized}}.get{{domain_plural_capitalized}}();
+    assertThat({{domain_plural}})
+        .hasSize(1)
+        .extracting("description")
+        .contains(
+            "I want to sleep\r\nSwat the flies\r\nSoftly, please.\r\n\r\n-- Masaoka Shiki (1867-1902)");
+  }
+
+  @Test
+  @DisplayName("should be able to get {{domain}} when asked for {{domain}} by id from stub")
+  public void get{{domain_capitalized}}ByIdFromMockedStub(@Mock Obtain{{domain_capitalized}} obtain{{domain_capitalized}}) {
+    // Given
+    // Stub
+    var code = 1L;
+    var description =
+        "I want to sleep\\r\\nSwat the flies\\r\\nSoftly, please.\\r\\n\\r\\n-- Masaoka Shiki (1867-1902)";
+    var expected{{domain_capitalized}} = {{domain_capitalized}}.builder().code(code).description(description).build();
+    Mockito.lenient()
+        .when(obtain{{domain_capitalized}}.get{{domain_capitalized}}ByCode(code))
+        .thenReturn(Optional.of(expected{{domain_capitalized}}));
+    // When
+    var request{{domain_capitalized}} = new {{domain_capitalized}}Domain(obtain{{domain_capitalized}});
+    var actual{{domain_capitalized}} = request{{domain_capitalized}}.get{{domain_capitalized}}ByCode(code);
+    assertThat(actual{{domain_capitalized}}).isNotNull().isEqualTo(expected{{domain_capitalized}});
+  }
+
+  @Test
+  @DisplayName("should throw exception when asked for {{domain}} by id that does not exists from stub")
+  public void getExceptionWhenAsked{{domain_capitalized}}ByIdThatDoesNotExist(@Mock Obtain{{domain_capitalized}} obtain{{domain_capitalized}}) {
+    // Given
+    // Stub
+    var code = -1000L;
+    Mockito.lenient().when(obtain{{domain_capitalized}}.get{{domain_capitalized}}ByCode(code)).thenReturn(Optional.empty());
+    // When
+    var request{{domain_capitalized}} = new {{domain_capitalized}}Domain(obtain{{domain_capitalized}});
+    // Then
+    assertThatThrownBy(() -> request{{domain_capitalized}}.get{{domain_capitalized}}ByCode(code))
+        .isInstanceOf({{domain_capitalized}}NotFoundException.class)
+        .hasMessageContaining("{{domain_capitalized}} with code " + code + " does not exist");
+  }
+}

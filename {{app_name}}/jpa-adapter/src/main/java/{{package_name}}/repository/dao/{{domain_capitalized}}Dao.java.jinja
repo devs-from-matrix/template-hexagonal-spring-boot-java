@@ -1,0 +1,14 @@
+package {{package_name}}.repository.dao;
+
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.history.RevisionRepository;
+import org.springframework.stereotype.Repository;
+import {{package_name}}.repository.entity.{{domain_capitalized}}Entity;
+
+@Repository
+public interface {{domain_capitalized}}Dao
+    extends JpaRepository<{{domain_capitalized}}Entity, Long>, RevisionRepository<{{domain_capitalized}}Entity, Long, Long> {
+
+  Optional<{{domain_capitalized}}Entity> findByCode(Long code);
+}

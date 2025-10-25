@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-t_{{domain}}
+      author: Paul WILLIAMS
+      changes:
+        - createTable:
+            tableName: T_{{domain_uppercase}}
+            columns:
+              - column:
+                  name: TECH_ID
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: CODE
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+          createSequence:
+            sequenceName: SEQ_T_{{domain_uppercase}}
+            startValue: 1
+            incrementBy: 1
+      rollback:
+        - dropSequence:
+            sequenceName: SEQ_T_{{domain_uppercase}}
+        - dropTable:
+            tableName: T_{{domain_uppercase}}
+  - changeSet:
+      id: create-table-t_{{domain}}_aud
+      author: Paul WILLIAMS
+      changes:
+        - createTable:
+            schemaName: {{domain_uppercase}}_AUDIT
+            tableName: T_{{domain_uppercase}}_AUD
+            columns:
+              - column:
+                  name: TECH_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CODE
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: REV
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_T_{{domain_uppercase}}_AUD_REV
+                    references: {{domain_uppercase}}_AUDIT.REVINFO(REV)
+              - column:
+                  name: REVTYPE
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            schemaName: {{domain_uppercase}}_AUDIT
+            tableName: T_{{domain_uppercase}}_AUD
+            columnNames: TECH_ID, REV
+      rollback:
+        - dropTable:
+            schemaName: {{domain_uppercase}}_AUDIT
+            tableName: T_{{domain_uppercase}}_AUD
+            cascadeConstraints: true

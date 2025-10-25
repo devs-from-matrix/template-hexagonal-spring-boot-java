@@ -1,0 +1,32 @@
+package {{package_name}}.domain;
+
+import java.util.List;
+import lombok.NonNull;
+import {{package_name}}.domain.exception.{{domain_capitalized}}NotFoundException;
+import {{package_name}}.domain.model.{{domain_capitalized}};
+import {{package_name}}.domain.port.Obtain{{domain_capitalized}};
+import {{package_name}}.domain.port.Request{{domain_capitalized}};
+
+public class {{domain_capitalized}}Domain implements Request{{domain_capitalized}} {
+
+  private final Obtain{{domain_capitalized}} obtain{{domain_capitalized}};
+
+  public {{domain_capitalized}}Domain() {
+    this(new Obtain{{domain_capitalized}}() {});
+  }
+
+  public {{domain_capitalized}}Domain(Obtain{{domain_capitalized}} obtain{{domain_capitalized}}) {
+    this.obtain{{domain_capitalized}} = obtain{{domain_capitalized}};
+  }
+
+  @Override
+  public List<{{domain_capitalized}}> get{{domain_plural_capitalized}}() {
+    return obtain{{domain_capitalized}}.getAll{{domain_plural_capitalized}}();
+  }
+
+  @Override
+  public {{domain_capitalized}} get{{domain_capitalized}}ByCode(@NonNull Long code) {
+    var {{domain}} = obtain{{domain_capitalized}}.get{{domain_capitalized}}ByCode(code);
+    return {{domain}}.orElseThrow(() -> new {{domain_capitalized}}NotFoundException(code));
+  }
+}

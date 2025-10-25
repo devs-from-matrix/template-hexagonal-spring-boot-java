@@ -1,0 +1,28 @@
+package {{package_name}}.domain.port;
+
+import java.util.List;
+import java.util.Optional;
+import lombok.NonNull;
+import {{package_name}}.domain.model.{{domain_capitalized}};
+
+public interface Obtain{{domain_capitalized}} {
+
+  default List<{{domain_capitalized}}> getAll{{domain_plural_capitalized}}() {
+    {{domain_capitalized}} {{domain}} =
+        {{domain_capitalized}}.builder()
+            .code(1L)
+            .description(
+                "If you could read a leaf or tree\r\nyoud have no need of books.\r\n-- Alistair Cockburn (1987)")
+            .build();
+    return List.of({{domain}});
+  }
+
+  default Optional<{{domain_capitalized}}> get{{domain_capitalized}}ByCode(@NonNull Long code) {
+    return Optional.of(
+        {{domain_capitalized}}.builder()
+            .code(1L)
+            .description(
+                "If you could read a leaf or tree\r\nyoud have no need of books.\r\n-- Alistair Cockburn (1987)")
+            .build());
+  }
+}

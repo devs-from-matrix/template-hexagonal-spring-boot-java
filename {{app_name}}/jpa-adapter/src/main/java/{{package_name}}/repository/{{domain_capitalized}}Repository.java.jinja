@@ -1,0 +1,29 @@
+package {{package_name}}.repository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import {{package_name}}.domain.model.{{domain_capitalized}};
+import {{package_name}}.domain.port.Obtain{{domain_capitalized}};
+import {{package_name}}.repository.dao.{{domain_capitalized}}Dao;
+import {{package_name}}.repository.entity.{{domain_capitalized}}Entity;
+
+public class {{domain_capitalized}}Repository implements Obtain{{domain_capitalized}} {
+
+  private final {{domain_capitalized}}Dao {{domain}}Dao;
+
+  public {{domain_capitalized}}Repository({{domain_capitalized}}Dao {{domain}}Dao) {
+    this.{{domain}}Dao = {{domain}}Dao;
+  }
+
+  @Override
+  public List<{{domain_capitalized}}> getAll{{domain_plural_capitalized}}() {
+    return {{domain}}Dao.findAll().stream().map({{domain_capitalized}}Entity::toModel).collect(Collectors.toList());
+  }
+
+  @Override
+  public Optional<{{domain_capitalized}}> get{{domain_capitalized}}ByCode(Long code) {
+    var {{domain}}Entity = {{domain}}Dao.findByCode(code);
+    return {{domain}}Entity.map({{domain_capitalized}}Entity::toModel);
+  }
+}

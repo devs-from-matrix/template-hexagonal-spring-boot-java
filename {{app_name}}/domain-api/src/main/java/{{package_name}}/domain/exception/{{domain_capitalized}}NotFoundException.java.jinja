@@ -1,0 +1,8 @@
+package {{package_name}}.domain.exception;
+
+public class {{domain_capitalized}}NotFoundException extends RuntimeException {
+
+  public {{domain_capitalized}}NotFoundException(Long id) {
+    super("{{domain_capitalized}} with code " + id + " does not exist");
+  }
+}
