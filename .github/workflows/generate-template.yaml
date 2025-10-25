@@ -32,7 +32,7 @@ jobs:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}   # PAT or GITHUB_TOKEN with write access
         run: |
           git fetch origin
-      
+          
           # --- Check if branch exists remotely ---
           if git show-ref --verify --quiet refs/remotes/origin/$GENERATED_BRANCH_NAME; then
             echo "✅ Branch $GENERATED_BRANCH_NAME exists remotely."
@@ -46,7 +46,7 @@ jobs:
             echo "branch_exists=false" >> $GITHUB_OUTPUT
           fi
           echo "branch=${GENERATED_BRANCH_NAME}" >> $GITHUB_OUTPUT
-      
+          
           # --- Check if PR already exists for this branch ---
           OPEN_PR=$(gh pr list --head "$GENERATED_BRANCH_NAME" --state open --json number --jq '.[0].number')
           if [ -n "$OPEN_PR" ]; then
@@ -59,14 +59,16 @@ jobs:
           fi
 
       - name: Make script executable
-        run: chmod +x ./generate-cookiecutter-template-from-example-project.sh
+        run: chmod +x ./generate-copier-template-from-example-project.sh
 
-      - name: Generate cookiecutter template
-        run: ./generate-cookiecutter-template-from-example-project.sh
+      - name: Generate copier template
+        run: ./generate-copier-template-from-example-project.sh
 
-      - name: Copy generated template to {{cookiecutter.app_name}}
+      - name: Copy generated template to {{app_name}}
         run: |
+          echo "📁 Copying template into {{app_name}}"
           rsync -a --delete --exclude='.git' ./example-template/ ./{{app_name}}/
+          echo "✅ Copy complete"
 
       - name: Commit and push changes
         id: commit
@@ -76,8 +78,9 @@ jobs:
             echo "no_changes=true" >> $GITHUB_OUTPUT
             echo "✅ No changes detected."
           else
-            git commit -m "ci: update generated cookiecutter template from example"
+            git commit -m "ci: update generated copier template from example"
             git push origin $GENERATED_BRANCH_NAME
+            echo "📤 Pushed updates to $GENERATED_BRANCH_NAME"
             echo "no_changes=false" >> $GITHUB_OUTPUT
           fi
 
@@ -89,5 +92,5 @@ jobs:
           gh pr create \
             --base main \
             --head $GENERATED_BRANCH_NAME \
-            --title "ci: update generated cookiecutter template from example" \
+            --title "ci: update generated copier template from example" \
             --body "Automated PR created by workflow."
