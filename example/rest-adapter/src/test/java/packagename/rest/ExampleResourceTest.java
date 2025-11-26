@@ -13,10 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -28,7 +27,7 @@ import packagename.rest.generated.model.ProblemDetail;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = ExampleRestAdapterApplication.class, webEnvironment = RANDOM_PORT)
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
+@AutoConfigureTestRestTemplate
 public class ExampleResourceTest {
 
   private static final String LOCALHOST = "http://localhost:";
