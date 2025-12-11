@@ -5,7 +5,7 @@ This is a template project for hexagonal-spring-boot-java. This project is gener
 ## Pre-requisites
 
 - [copier](https://copier.readthedocs.io/en/stable/#installation)
-- Jdk 21
+- Jdk 25
 - Maven >3.9.5
 
 ## How to contribute ?

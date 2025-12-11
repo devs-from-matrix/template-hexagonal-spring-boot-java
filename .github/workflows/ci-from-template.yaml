@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # checkout the pull request head ref when available, otherwise fallback to the workflow ref
           ref: ${{ github.head_ref || github.ref }}
@@ -46,11 +46,11 @@ jobs:
         run: |
           echo "Working dir: $(pwd)"
           ls -la ./cart-service
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 25
       - name: Cache Maven dependencies
         uses: actions/cache@v4
         with:
