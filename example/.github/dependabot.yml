@@ -1,10 +1,17 @@
 version: 2
 updates:
-- package-ecosystem: maven
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "23:30"
-  open-pull-requests-limit: 10
-  assignees:
-  - paul58914080
+  - package-ecosystem: maven
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "23:30"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "build: "
+  - package-ecosystem: github-actions
+    directory: "/.github/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci: "
