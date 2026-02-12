@@ -14,7 +14,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <junit-jupiter.version>6.0.2</junit-jupiter.version>
     <spring-boot.version>4.0.2</spring-boot.version>
-    <cucumber.version>7.34.1</cucumber.version>
+    <cucumber.version>7.34.2</cucumber.version>
     <springdoc-openapi-starter.version>3.0.1</springdoc-openapi-starter.version>
     <pre-liquibase.version>2.0.0</pre-liquibase.version>
     <otj-pg-embedded.version>1.1.1</otj-pg-embedded.version>
@@ -25,7 +25,7 @@
     <maven-enforcer-plugin>3.6.2</maven-enforcer-plugin>
     <arch-unit-maven-plugin.version>5.0.0</arch-unit-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
-    <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+    <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
     <jib-maven.plugin.version>3.5.1</jib-maven.plugin.version>
     <git-code-format-maven-plugin.version>5.4</git-code-format-maven-plugin.version>
     <githook-maven-plugin.version>1.0.5</githook-maven-plugin.version>
