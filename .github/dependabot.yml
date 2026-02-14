@@ -8,10 +8,14 @@ updates:
       time: "23:30"
     open-pull-requests-limit: 10
     commit-message:
-        prefix: "build: "
+      prefix: "build: "
+    assignees:
+      - paul58914080
     labels:
       - dependencies
       - automated
+    reviewers:
+      - devs-from-matrix/app-generator-team
   - package-ecosystem: github-actions
     directory: "/.github/"
     schedule:
@@ -19,6 +23,10 @@ updates:
     open-pull-requests-limit: 5
     commit-message:
       prefix: "ci: "
+    assignees:
+      - paul58914080
     labels:
       - ci
       - automated
+    reviewers:
+      - devs-from-matrix/app-generator-team
