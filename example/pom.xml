@@ -24,7 +24,7 @@
     <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
     <maven-enforcer-plugin>3.6.3</maven-enforcer-plugin>
     <arch-unit-maven-plugin.version>5.0.0</arch-unit-maven-plugin.version>
-    <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
     <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
     <jib-maven.plugin.version>3.5.1</jib-maven.plugin.version>
     <git-code-format-maven-plugin.version>5.4</git-code-format-maven-plugin.version>
