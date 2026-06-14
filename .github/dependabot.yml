@@ -1,5 +1,6 @@
 version: 2
 updates:
+  # This is for the example directory, which is where the Maven project is located.
   - package-ecosystem: maven
     directory: "/example"
     schedule:
@@ -35,6 +36,20 @@ updates:
     labels:
       - dependencies
       - automated
+  # This is for the example directory, which is where the GitHub Actions workflows are located.
+  - package-ecosystem: github-actions
+    directory: "/example"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci: "
+    assignees:
+      - paul58914080
+    labels:
+      - ci
+      - automated
+  # This is for the root directory, which is where the GitHub Actions workflows are located.
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
