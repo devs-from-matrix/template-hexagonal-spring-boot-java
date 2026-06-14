@@ -29,7 +29,7 @@ jobs:
           # Use copier.yml as the default data file with --defaults and --force to overwrite any existing generated output.
           copier copy . . --defaults --force
       - name: Upload generated cart-service as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cart-service
           path: ./cart-service
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download generated cart-service artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: cart-service
           path: ./cart-service
