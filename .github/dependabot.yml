@@ -41,6 +41,20 @@ updates:
     directory: "/example"
     schedule:
       interval: weekly
+    groups:
+      actions-core:
+        patterns:
+          - "actions/checkout"
+          - "actions/cache"
+      language-setup:
+        patterns:
+          - "actions/setup-java"
+          - "actions/setup-python"
+      reporting:
+        patterns:
+          - "actions/upload-artifact"
+          - "actions/download-artifact"
+          - "codecov/codecov-action"
     open-pull-requests-limit: 5
     commit-message:
       prefix: "ci: "
@@ -54,6 +68,20 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
+    groups:
+      actions-core:
+        patterns:
+          - "actions/checkout"
+          - "actions/cache"
+      language-setup:
+        patterns:
+          - "actions/setup-java"
+          - "actions/setup-python"
+      reporting:
+        patterns:
+          - "actions/upload-artifact"
+          - "actions/download-artifact"
+          - "codecov/codecov-action"
     open-pull-requests-limit: 5
     commit-message:
       prefix: "ci: "
