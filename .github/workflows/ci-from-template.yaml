@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           # checkout the pull request head ref when available, otherwise fallback to the workflow ref
           ref: ${{ github.head_ref || github.ref }}
