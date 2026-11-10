@@ -6,27 +6,12 @@ updates:
       interval: daily
       time: "23:30"
     groups:
-      spring:
+      maven-minor-and-patch:
         patterns:
-          - "org.springframework:*"
-          - "org.springframework.boot:*"
-      testing:
-        patterns:
-          - "org.junit*:*"
-          - "org.mockito:*"
-          - "org.assertj:*"
-          - "org.testcontainers:*"
-          - "io.cucumber:*"
-      logging:
-        patterns:
-          - "org.slf4j:*"
-          - "ch.qos.logback:*"
-      jackson:
-        patterns:
-          - "com.fasterxml.jackson*:*"
-      apache:
-        patterns:
-          - "org.apache.*:*"
+          - "*"
+        update-types:
+          - minor
+          - patch
     open-pull-requests-limit: 10
     commit-message:
       prefix: "build: "
@@ -34,20 +19,15 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
-    groups:
-      actions-core:
-        patterns:
-          - "actions/checkout"
-          - "actions/cache"
-      language-setup:
-        patterns:
-          - "actions/setup-java"
-          - "actions/setup-python"
-      reporting:
-        patterns:
-          - "actions/upload-artifact"
-          - "actions/download-artifact"
-          - "codecov/codecov-action"
     open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    labels:
+      - ci
+      - automated
     commit-message:
       prefix: "ci: "
+    assignees:
+      - paul58914080
